@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>پنل مدیریت | کراپ ایران</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body { font-family: Tahoma, sans-serif; }</style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+  <div class="min-h-screen flex flex-col lg:flex-row">
+    <aside class="w-full lg:w-72 bg-slate-950 text-white p-6">
+      <div class="mb-8">
+        <h1 class="text-2xl font-extrabold text-orange-400">Crop Admin</h1>
+        <p class="text-slate-400 mt-2 text-sm">پنل نمایشی برای نمونه‌کار</p>
+      </div>
+      <nav class="space-y-3">
+        <button class="tabBtn w-full text-right px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition" data-tab="dashboard">داشبورد</button>
+        <button class="tabBtn w-full text-right px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition" data-tab="products">محصولات</button>
+        <button class="tabBtn w-full text-right px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition" data-tab="articles">مقالات</button>
+      </nav>
+      <div class="mt-8 space-y-3">
+        <a href="index.html" class="block text-center bg-slate-800 hover:bg-slate-700 px-4 py-3 rounded-xl">مشاهده سایت</a>
+        <button id="logoutBtn" class="w-full bg-red-500 hover:bg-red-600 px-4 py-3 rounded-xl">خروج</button>
+      </div>
+    </aside>
+    <main class="flex-1 p-6 lg:p-8">
+      <div id="toast" class="hidden fixed top-5 left-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl z-50"></div>
+      <section id="dashboardTab" class="tabContent">
+        <div class="mb-8"><h2 class="text-3xl font-extrabold">داشبورد مدیریتی</h2><p class="text-gray-600 mt-2">مرور سریع اطلاعات و محتوای ثبت شده</p></div>
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-white rounded-2xl p-6 shadow-sm"><p class="text-gray-500 mb-2">تعداد محصولات</p><h3 id="productsCount" class="text-3xl font-extrabold text-orange-500">0</h3></div>
+          <div class="bg-white rounded-2xl p-6 shadow-sm"><p class="text-gray-500 mb-2">تعداد مقالات</p><h3 id="articlesCount" class="text-3xl font-extrabold text-slate-900">0</h3></div>
+          <div class="bg-white rounded-2xl p-6 shadow-sm"><p class="text-gray-500 mb-2">وضعیت پروژه</p><h3 class="text-3xl font-extrabold text-green-500">Portfolio</h3></div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="text-xl font-bold mb-4">آخرین محصولات</h3><div id="latestProducts" class="space-y-3"></div></div>
+          <div class="bg-white rounded-2xl p-6 shadow-sm"><h3 class="text-xl font-bold mb-4">آخرین مقالات</h3><div id="latestArticles" class="space-y-3"></div></div>
+        </div>
+      </section>
+      <section id="productsTab" class="tabContent hidden">
+        <div class="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div><h2 class="text-3xl font-extrabold">مدیریت محصولات</h2><p class="text-gray-600 mt-2">افزودن، ویرایش، حذف و جستجوی محصولات</p></div>
+          <input id="adminProductSearch" type="text" placeholder="جستجو در محصولات..." class="border rounded-xl px-4 py-3 bg-white w-full lg:w-80" />
+        </div>
+        <div class="grid xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-1 bg-white rounded-2xl p-6 shadow-sm h-fit">
+            <h3 id="productFormTitle" class="text-xl font-bold mb-4">افزودن محصول</h3>
+            <form id="productForm" class="space-y-4">
+              <input type="hidden" id="productId" />
+              <input id="productName" type="text" placeholder="نام محصول" class="w-full border rounded-xl px-4 py-3" required />
+              <input id="productPrice" type="text" placeholder="قیمت فعلی" class="w-full border rounded-xl px-4 py-3" required />
+              <input id="productOldPrice" type="text" placeholder="قیمت قبلی" class="w-full border rounded-xl px-4 py-3" />
+              <input id="productStock" type="text" placeholder="وضعیت موجودی" class="w-full border rounded-xl px-4 py-3" value="موجود در انبار" />
+              <input id="productCategory" type="text" placeholder="دسته‌بندی محصول" class="w-full border rounded-xl px-4 py-3" required />
+              <input id="productImage" type="file" accept="image/*" class="w-full border rounded-xl px-4 py-3 bg-white" />
+              <div id="imagePreviewWrapper" class="hidden"><img id="imagePreview" class="w-full h-44 object-cover rounded-xl border" alt="preview"></div>
+              <div class="flex gap-3">
+                <button type="submit" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-bold">ذخیره محصول</button>
+                <button type="button" id="cancelProductEdit" class="hidden bg-slate-200 hover:bg-slate-300 px-4 py-3 rounded-xl font-bold">انصراف</button>
+              </div>
+            </form>
+          </div>
+          <div class="xl:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold">لیست محصولات</h3><button id="clearProductsBtn" class="bg-red-100 text-red-600 hover:bg-red-200 px-4 py-2 rounded-xl">حذف همه</button></div>
+            <div id="productsList" class="space-y-4"></div>
+          </div>
+        </div>
+      </section>
+      <section id="articlesTab" class="tabContent hidden">
+        <div class="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div><h2 class="text-3xl font-extrabold">مدیریت مقالات</h2><p class="text-gray-600 mt-2">افزودن، ویرایش، حذف و جستجوی مقالات</p></div>
+          <input id="adminArticleSearch" type="text" placeholder="جستجو در مقالات..." class="border rounded-xl px-4 py-3 bg-white w-full lg:w-80" />
+        </div>
+        <div class="grid xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-1 bg-white rounded-2xl p-6 shadow-sm h-fit">
+            <h3 id="articleFormTitle" class="text-xl font-bold mb-4">افزودن مقاله</h3>
+            <form id="articleForm" class="space-y-4">
+              <input type="hidden" id="articleId" />
+              <input id="articleTitle" type="text" placeholder="عنوان مقاله" class="w-full border rounded-xl px-4 py-3" required />
+              <input id="articleDate" type="text" placeholder="تاریخ مقاله" class="w-full border rounded-xl px-4 py-3" required />
+              <textarea id="articleDesc" placeholder="توضیح مقاله" class="w-full border rounded-xl px-4 py-3 min-h-[140px]" required></textarea>
+              <div class="flex gap-3">
+                <button type="submit" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold">ذخیره مقاله</button>
+                <button type="button" id="cancelArticleEdit" class="hidden bg-slate-200 hover:bg-slate-300 px-4 py-3 rounded-xl font-bold">انصراف</button>
+              </div>
+            </form>
+          </div>
+          <div class="xl:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4"><h3 class="text-xl font-bold">لیست مقالات</h3><button id="clearArticlesBtn" class="bg-red-100 text-red-600 hover:bg-red-200 px-4 py-2 rounded-xl">حذف همه</button></div>
+            <div id="articlesList" class="space-y-4"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

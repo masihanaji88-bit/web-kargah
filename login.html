@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ورود پنل مدیریت</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body { font-family: Tahoma, sans-serif; }</style>
+</head>
+<body class="min-h-screen bg-gradient-to-l from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center px-4">
+  <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-extrabold text-slate-900">ورود ادمین</h1>
+      <p class="text-gray-500 mt-3">برای مدیریت محتوای پروژه وارد شوید</p>
+    </div>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm mb-2 text-gray-700">نام کاربری</label>
+        <input id="username" type="text" class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="admin" />
+      </div>
+      <div>
+        <label class="block text-sm mb-2 text-gray-700">رمز عبور</label>
+        <input id="password" type="password" class="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="1234" />
+      </div>
+      <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-bold transition">ورود</button>
+    </form>
+    <div class="mt-5 text-center text-sm text-gray-500">نام کاربری: <b>admin</b> | رمز عبور: <b>1234</b></div>
+    <p id="loginError" class="hidden mt-4 text-center text-red-500 text-sm">اطلاعات ورود اشتباه است</p>
+  </div>
+  <script>
+    const form = document.getElementById("loginForm");
+    const error = document.getElementById("loginError");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (username === "admin" && password === "1234") {
+        localStorage.setItem("isAdminLoggedIn", "true");
+        window.location.href = "admin.html";
+      } else {
+        error.classList.remove("hidden");
+      }
+    });
+  </script>
+</body>
+</html>
